@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Android Exam_Trade Dynamics</string>
+
+    <string name="product_name">Product Name</string>
+    <string name="product_unit">Product Unit</string>
+    <string name="product_price">0.00</string>
+    <string name="expiry_date">--- --, ----</string>
+    <string name="product_quantity">0</string>
+    <string name="image_path">Image Path</string>
+    <string name="button_save">Save</string>
+    <string name="button_update">Update</string>
+    <string name="inventory_cost">0.00</string>
+</resources>
