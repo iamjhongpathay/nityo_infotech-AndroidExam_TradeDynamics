@@ -22,7 +22,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/ivRowProductImage"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_marginStart="10dp"
@@ -32,7 +32,7 @@
                 app:srcCompat="@drawable/baseline_image_24" />
 
             <TextView
-                android:id="@+id/tvProductName"
+                android:id="@+id/tvRowProductName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -41,18 +41,18 @@
                 android:text="@string/product_name"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toTopOf="@+id/imageView" />
+                app:layout_constraintStart_toEndOf="@+id/ivRowProductImage"
+                app:layout_constraintTop_toTopOf="@+id/ivRowProductImage" />
 
             <TextView
-                android:id="@+id/tvProductUnit"
+                android:id="@+id/tvRowProductUnit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:text="@string/product_unit"
-                app:layout_constraintEnd_toEndOf="@+id/tvProductName"
-                app:layout_constraintStart_toStartOf="@+id/tvProductName"
-                app:layout_constraintTop_toBottomOf="@+id/tvProductName" />
+                app:layout_constraintEnd_toEndOf="@+id/tvRowProductName"
+                app:layout_constraintStart_toStartOf="@+id/tvRowProductName"
+                app:layout_constraintTop_toBottomOf="@+id/tvRowProductName" />
 
             <TextView
                 android:id="@+id/textView9"
@@ -60,17 +60,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="Price:"
-                app:layout_constraintStart_toStartOf="@+id/tvProductUnit"
-                app:layout_constraintTop_toBottomOf="@+id/tvProductUnit" />
+                app:layout_constraintStart_toStartOf="@+id/tvRowProductUnit"
+                app:layout_constraintTop_toBottomOf="@+id/tvRowProductUnit" />
 
             <TextView
-                android:id="@+id/tvPrice"
+                android:id="@+id/tvRowPrice"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="@string/product_price"
                 app:layout_constraintBottom_toBottomOf="@+id/textView9"
-                app:layout_constraintEnd_toEndOf="@+id/tvProductUnit"
+                app:layout_constraintEnd_toEndOf="@+id/tvRowProductUnit"
                 app:layout_constraintStart_toEndOf="@+id/textView9"
                 app:layout_constraintTop_toTopOf="@+id/textView9" />
 
@@ -85,7 +85,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
             <TextView
-                android:id="@+id/tvStock"
+                android:id="@+id/tvRowStock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -100,19 +100,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="in stock"
-                app:layout_constraintBottom_toBottomOf="@+id/tvStock"
-                app:layout_constraintStart_toEndOf="@+id/tvStock"
-                app:layout_constraintTop_toTopOf="@+id/tvStock" />
+                app:layout_constraintBottom_toBottomOf="@+id/tvRowStock"
+                app:layout_constraintStart_toEndOf="@+id/tvRowStock"
+                app:layout_constraintTop_toTopOf="@+id/tvRowStock" />
 
             <TextView
-                android:id="@+id/tvInventoryCost"
+                android:id="@+id/tvRowInventoryCost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="@string/inventory_cost"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/tvStock"
-                app:layout_constraintTop_toBottomOf="@+id/tvStock"
+                app:layout_constraintStart_toStartOf="@+id/tvRowStock"
+                app:layout_constraintTop_toBottomOf="@+id/tvRowStock"
                 app:layout_constraintVertical_bias="1.0" />
 
             <TextView
@@ -121,10 +121,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="Inventory Cost"
-                app:layout_constraintBottom_toBottomOf="@+id/tvInventoryCost"
+                app:layout_constraintBottom_toBottomOf="@+id/tvRowInventoryCost"
                 app:layout_constraintEnd_toStartOf="@+id/divider3"
-                app:layout_constraintStart_toEndOf="@+id/tvInventoryCost"
-                app:layout_constraintTop_toTopOf="@+id/tvInventoryCost" />
+                app:layout_constraintStart_toEndOf="@+id/tvRowInventoryCost"
+                app:layout_constraintTop_toTopOf="@+id/tvRowInventoryCost" />
 
             <View
                 android:id="@+id/divider3"

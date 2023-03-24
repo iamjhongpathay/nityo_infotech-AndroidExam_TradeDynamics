@@ -1,11 +1,11 @@
 package com.kwago.visuals.app.androidexam_tradedynamics
 
+import android.R.attr.bitmap
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -20,17 +20,17 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import com.kwago.visuals.app.androidexam_tradedynamics.databinding.ActivityEditProductBinding
+import com.kwago.visuals.app.androidexam_tradedynamics.databinding.ActivityAddProductBinding
 import com.kwago.visuals.app.androidexam_tradedynamics.db.DatabaseHelper
 import com.kwago.visuals.app.androidexam_tradedynamics.db.Inventory
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EditProductActivity : AppCompatActivity() , DatePickerDialog.OnDateSetListener {
 
-    lateinit var binding : ActivityEditProductBinding
+class AddProductActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
+
+    lateinit var binding: ActivityAddProductBinding
     private val calendar = Calendar.getInstance()
     private val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
     private lateinit var inventory: Inventory
@@ -38,62 +38,53 @@ class EditProductActivity : AppCompatActivity() , DatePickerDialog.OnDateSetList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityEditProductBinding.inflate(layoutInflater)
+        binding = ActivityAddProductBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         openDatePicker()
         displayExpiryDate(calendar.timeInMillis).toString()
 
-        binding.btnCancelEdit.setOnClickListener(){finish()}
-        binding.btnEditAddPhoto.setOnClickListener(){showDataSourceChoicesDialog()}
+        binding.btnSaveAdd.setOnClickListener(){ saveProduct()}
+        binding.btnCancelAdd.setOnClickListener() {finish()}
+        binding.btnAddPhoto.setOnClickListener(){ showDataSourceChoicesDialog()}
 
-        var id: Int = intent.getIntExtra("id", 0)
-        var productName: String? = intent.getStringExtra("productName")
-        var productUnit: String? = intent.getStringExtra("productUnit")
-        var price: Double = intent.getDoubleExtra("price", 0.0)
-        var expirationDate: String? = intent.getStringExtra("expirationDate")
-        var quantity: Int = intent.getIntExtra("quantity", 0)
-        var imagePath: ByteArray? = intent.getByteArrayExtra("imagePath")
+    }
 
-        val inputStream = ByteArrayInputStream(imagePath)
-        val bitmap = BitmapFactory.decodeStream(inputStream)
+    private fun saveProduct(){
 
-        binding.etEditProductName.setText(productName)
-        binding.etEditProductUnit.setText(productUnit)
-        binding.etEditPrice.setText(price.toString())
-        binding.tvEditExpiryDate.text = expirationDate
-        binding.etEditStock.setText(quantity.toString())
-        binding.ivEditPhotoPlaceHolder.setImageBitmap(bitmap)
+        var databaseHelper = DatabaseHelper(applicationContext)
+        var productName = binding.etAddProductName.text.toString()
+        var productUnit = binding.etAddProductUnit.text.toString()
+        var price = binding.etAddPrice.text.toString().toDouble()
+        var dateOfExpiration = binding.tvExpiryDate.text.toString()
+        var stock = binding.etAddStock.text.toString().toInt()
 
-        binding.btnUpdate.setOnClickListener(){
-            var databaseHelper = DatabaseHelper(applicationContext)
 
-            var uProductName = binding.etEditProductName.text.toString()
-            var uProductUnit = binding.etEditProductUnit.text.toString()
-            var uPrice = binding.etEditPrice.text.toString().toDouble()
-            var uExpirationDate = binding.tvEditExpiryDate.text.toString()
-            var uStock = binding.etEditStock.text.toString().toInt()
+        val resized = Bitmap.createScaledBitmap(
+            selectedImage,
+            100,
+            100,
+            true
+        )
+        val stream = ByteArrayOutputStream()
+        resized.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        val byteArray = stream.toByteArray()
 
-            val resized = Bitmap.createScaledBitmap(
-                selectedImage,
-                100,
-                100,
-                true
-            )
-            val stream = ByteArrayOutputStream()
-            resized.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            val byteArray = stream.toByteArray()
+        inventory = Inventory(0, productName, productUnit, price, dateOfExpiration, stock, byteArray)
+        databaseHelper.add(inventory)
 
-            inventory = Inventory(id, uProductName, uProductUnit, uPrice, uExpirationDate, uStock, byteArray)
+        Toast.makeText(applicationContext, "Successfully Saved!", Toast.LENGTH_LONG).show()
 
-            databaseHelper.update(inventory)
+        binding.etAddProductName.text?.clear()
+        binding.etAddProductUnit.text?.clear()
+        binding.etAddPrice.text?.clear()
+        displayExpiryDate(calendar.timeInMillis).toString()
+        binding.etAddStock.text?.clear()
 
-            Toast.makeText(applicationContext, "Successfully Updated!", Toast.LENGTH_LONG).show()
-        }
     }
 
     private fun openDatePicker(){
-        binding.tvEditExpiryDate.setOnClickListener(){
+        binding.tvExpiryDate.setOnClickListener(){
             DatePickerDialog(
                 this,
                 this,
@@ -104,8 +95,8 @@ class EditProductActivity : AppCompatActivity() , DatePickerDialog.OnDateSetList
         }
     }
 
-    private fun displayExpiryDate(timeStamp : Long) {
-        binding.tvEditExpiryDate.text = dateFormat.format(timeStamp)
+    private fun displayExpiryDate(timeStamp: Long){
+        binding.tvExpiryDate.text = dateFormat.format(timeStamp)
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
@@ -153,7 +144,7 @@ class EditProductActivity : AppCompatActivity() , DatePickerDialog.OnDateSetList
     private fun showCamera() {
         Dexter.withContext(applicationContext).withPermission(
             android.Manifest.permission.CAMERA
-        ).withListener(object: PermissionListener {
+        ).withListener(object: PermissionListener{
             override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
                 //if the user granted the permission to use camera app...
                 val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -194,18 +185,17 @@ class EditProductActivity : AppCompatActivity() , DatePickerDialog.OnDateSetList
         if(result.resultCode == Activity.RESULT_OK){
             result.data?.extras.let{
                 selectedImage = result.data?.extras?.get("data") as Bitmap
-                binding.ivEditPhotoPlaceHolder.setImageBitmap(selectedImage)
+                binding.ivAddPhotoPlaceHolder.setImageBitmap(selectedImage)
             }
         }
     }
-
     //the gallery app will launched
     val galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
         if(result.resultCode == Activity.RESULT_OK){
             result.data?.let{
                 val galleryImage = result.data?.data
                 selectedImage = MediaStore.Images.Media.getBitmap(this.contentResolver, galleryImage)
-                binding.ivEditPhotoPlaceHolder.setImageBitmap(selectedImage)
+                binding.ivAddPhotoPlaceHolder.setImageBitmap(selectedImage)
             }
         }
     }

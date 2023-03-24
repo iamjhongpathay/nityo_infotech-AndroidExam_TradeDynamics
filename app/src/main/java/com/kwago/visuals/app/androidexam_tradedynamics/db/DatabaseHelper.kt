@@ -5,11 +5,10 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.os.Build.ID
 
 class DatabaseHelper(context: Context): SQLiteOpenHelper(context, "androidexam_tradedynamic.db", null, 1){
     override fun onCreate(db: SQLiteDatabase?) {
-        var createTable: String = "CREATE TABLE Inventory (id integer primary key autoincrement, productName varchar(100), productUnit varchar(100), price int, dateOfExpiration varchar(100), quantity int, imagePath varchar(200))"
+        val createTable: String = "CREATE TABLE Inventory (id integer primary key autoincrement, productName varchar(100), productUnit varchar(100), price decimal(-4.535,2), dateOfExpiration varchar(100), stock int, imagePath BLOB)"
         db?.execSQL(createTable)
     }
 
@@ -25,7 +24,7 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(context, "androidexam_t
         cv.put("productUnit", inventory.productUnit)
         cv.put("price", inventory.price)
         cv.put("dateOfExpiration", inventory.dateOfExpiration)
-        cv.put("quantity", inventory.quantity)
+        cv.put("stock", inventory.stock)
         cv.put("imagePath", inventory.imagePath)
 
         db.insert("INVENTORY", null, cv)
@@ -42,10 +41,10 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(context, "androidexam_t
                 var id = cursor.getInt(0)
                 var productName = cursor.getString(1)
                 var productUnit = cursor.getString(2)
-                var price = cursor.getInt(3)
+                var price = cursor.getDouble(3)
                 var dateOfExpiration = cursor.getString(4)
                 var quantity = cursor.getInt(5)
-                var imagePath = cursor.getString(6)
+                var imagePath = cursor.getBlob(6)
 
                 var newInventory: Inventory = Inventory(id, productName, productUnit, price, dateOfExpiration, quantity, imagePath)
                 returnList.add(newInventory)
@@ -72,7 +71,7 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(context, "androidexam_t
         cv.put("productUnit", inventory.productUnit)
         cv.put("price", inventory.price)
         cv.put("dateOfExpiration", inventory.dateOfExpiration)
-        cv.put("quantity", inventory.quantity)
+        cv.put("stock", inventory.stock)
         cv.put("imagePath", inventory.imagePath)
 
         val success = db.update("INVENTORY", cv, "id=" + inventory.id, null)

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
-    tools:context=".EditProductActivity">
+    tools:context=".AddProductActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -23,13 +23,13 @@
             android:layout_height="200dp">
 
             <ImageView
-                android:id="@+id/ivEditPhotoPlaceHolder"
+                android:id="@+id/ivAddPhotoPlaceHolder"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:scaleType="centerCrop" />
 
             <ImageButton
-                android:id="@+id/btnEditAddPhoto"
+                android:id="@+id/btnAddPhoto"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
@@ -50,11 +50,12 @@
         android:padding="5dp"
         app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.526"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etEditProductName"
+            android:id="@+id/etAddProductName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -72,7 +73,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etEditProductUnit"
+            android:id="@+id/etAddProductUnit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -89,7 +90,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout1">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etEditPrice"
+            android:id="@+id/etAddPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />
@@ -117,7 +118,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
 
     <TextView
-        android:id="@+id/tvEditExpiryDate"
+        android:id="@+id/tvExpiryDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
@@ -152,29 +153,29 @@
         app:layout_constraintTop_toBottomOf="@+id/textView6">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etEditStock"
+            android:id="@+id/etAddStock"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/btnUpdate"
+        android:id="@+id/btnSaveAdd"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:height="50dp"
         android:backgroundTint="@color/purple_200"
-        android:text="@string/button_update"
-        app:layout_constraintBottom_toBottomOf="@+id/btnCancelEdit"
+        android:text="@string/button_save"
+        app:layout_constraintBottom_toBottomOf="@+id/btnCancelAdd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnCancelEdit"
-        app:layout_constraintTop_toTopOf="@+id/btnCancelEdit" />
+        app:layout_constraintStart_toEndOf="@+id/btnCancelAdd"
+        app:layout_constraintTop_toTopOf="@+id/btnCancelAdd" />
 
     <Button
-        android:id="@+id/btnCancelEdit"
+        android:id="@+id/btnCancelAdd"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -184,7 +185,7 @@
         android:backgroundTint="@color/grey"
         android:text="@string/button_cancel"
         android:textColor="@color/purple_200"
-        app:layout_constraintEnd_toStartOf="@+id/btnUpdate"
+        app:layout_constraintEnd_toStartOf="@+id/btnSaveAdd"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />

@@ -5,65 +5,57 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.kwago.visuals.app.androidexam_tradedynamics.databinding.ActivityMainBinding
 import com.kwago.visuals.app.androidexam_tradedynamics.db.DatabaseHelper
 import com.kwago.visuals.app.androidexam_tradedynamics.db.Inventory
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
+class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    lateinit var inventory: Inventory
+    lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
-    private val calendar = Calendar.getInstance()
-    private val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        displayFormattedDate(calendar.timeInMillis).toString()
+        openAddProductActivity()
+        displayProducts()
 
+        //swipe down to refresh recyclerview
+        swipeRefreshLayout = binding.swipeRefreshLayout
+        swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = false
+
+            displayProducts()
+        }
+    }
+
+    private fun displayProducts(){
         var databaseHelper = DatabaseHelper(applicationContext)
         var readInventory: MutableList<Inventory> = databaseHelper.readAll()
         var adapter = InventoryAdapter(readInventory)
 
-        binding.recyclerViewProducts.adapter = adapter
-        binding.recyclerViewProducts.layoutManager = LinearLayoutManager(this)
+        if(readInventory.isEmpty()){
+            binding.imageView2.visibility = View.VISIBLE
+            binding.textView2.visibility = View.VISIBLE
+            binding.recyclerViewProducts.visibility = View.GONE
+        }else{
+            binding.imageView2.visibility = View.GONE
+            binding.textView2.visibility = View.GONE
+            binding.recyclerViewProducts.visibility = View.VISIBLE
 
-
-        binding.tvDateOfExpiration.setOnClickListener(){
-            val datePicker = DatePickerDialog(
-                applicationContext,
-               this,
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH),
-            ).show()
+            binding.recyclerViewProducts.adapter = adapter
+            binding.recyclerViewProducts.layoutManager = LinearLayoutManager(this)
         }
 
-        binding.btnSave.setOnClickListener(){
-            var productName = binding.etProductName.text.toString()
-            var productUnit = binding.etProductUnit.text.toString()
-            var price = binding.etPrice.text.toString().toInt()
-            var dateOfExpiration = binding.tvDateOfExpiration.text.toString()
-            var quantity = binding.etQuantity.text.toString().toInt()
-            var imagePath = binding.etImagePath.text.toString()
-
-            inventory = Inventory(0, productName, productUnit, price, dateOfExpiration, quantity, imagePath)
-            var databaseHelper = DatabaseHelper(applicationContext)
-            databaseHelper.add(inventory)
-
-            adapter.inventory.add(inventory)
-            adapter.notifyDataSetChanged()
-
-            Toast.makeText(applicationContext, "New Data Saved!", Toast.LENGTH_LONG).show()
-
-        }
 
         adapter.onItemClick ={
             val intent = Intent(this, EditProductActivity::class.java)
@@ -72,7 +64,7 @@ class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
             intent.putExtra("productUnit", it.productUnit)
             intent.putExtra("price", it.price)
             intent.putExtra("expirationDate", it.dateOfExpiration)
-            intent.putExtra("quantity", it.quantity)
+            intent.putExtra("quantity", it.stock)
             intent.putExtra("imagePath", it.imagePath)
             startActivity(intent)
         }
@@ -91,14 +83,13 @@ class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
                 .setNegativeButton("Cancel"){dialog, item ->
                 }.show()
         }
-
+        adapter.notifyDataSetChanged()
     }
 
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        calendar.set(year, month, dayOfMonth)
-    }
-
-    private fun displayFormattedDate(timeStamp : Long) {
-        binding.tvDateOfExpiration.text = dateFormat.format(timeStamp)
+    private fun openAddProductActivity(){
+        binding.fabAdd.setOnClickListener(){
+            val intent = Intent(this, AddProductActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
